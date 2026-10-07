@@ -70,7 +70,7 @@ Aplicación interactiva en **Streamlit** para el Análisis Exploratorio de Datos
    ```
 4. En el menú lateral, ir a **Carga del dataset** y subir `InsuranceCompany.csv`.
 
-## Capturas
+## Capturas del Trabajo Final
 
 ![Home](capturas/home.png)
 ![Carga del dataset](capturas/carga.png)
