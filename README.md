@@ -1,4 +1,4 @@
-# 🛡️ ¿Qué hace que un cliente renueve su póliza? — EDA Insurance Company
+# ¿Qué hace que un cliente renueve su póliza? - EDA Insurance Company
 
 Aplicación interactiva en **Streamlit** para el Análisis Exploratorio de Datos (EDA) del dataset `InsuranceCompany.csv`. Busca identificar qué factores están asociados a la **renovación de pólizas de seguro** (variable `renewal`), con un enfoque en la **toma de decisiones de retención**, no en la predicción.
 
@@ -8,14 +8,14 @@ Aplicación interactiva en **Streamlit** para el Análisis Exploratorio de Datos
 
 ---
 
-## 🔗 Links
+## Links
 
 - **App desplegada:** https://trabajo-final-python-insurance.streamlit.app/
 - **Repositorio:** https://github.com/di4n420/TrabajoFinal
 
 ---
 
-## 📊 Contenido de la aplicación
+## Contenido de la aplicación
 
 | Módulo | Qué contiene |
 |---|---|
@@ -36,7 +36,7 @@ Aplicación interactiva en **Streamlit** para el Análisis Exploratorio de Datos
 9. Análisis dinámico con filtros (canal, residencia, edad, atrasos)
 10. Hallazgos clave (gráfico resumen 2x2)
 
-## 💡 Hallazgos principales
+## Hallazgos principales
 
 - El **93.7%** de los clientes renueva.
 - Los **pagos atrasados** son la señal más fuerte: sin atrasos renueva el 97.1%; con 3 o más, solo el 59.4%.
@@ -45,7 +45,7 @@ Aplicación interactiva en **Streamlit** para el Análisis Exploratorio de Datos
 - El **canal A** tiene la mejor renovación (94.6%) y el **canal D** la peor (91.6%).
 - Las zonas **urbana y rural** renuevan prácticamente igual.
 
-## 🧱 Estructura del proyecto
+## Estructura del proyecto
 
 ```
 ├── app.py                      # Aplicación Streamlit (módulos y widgets)
@@ -57,11 +57,11 @@ Aplicación interactiva en **Streamlit** para el Análisis Exploratorio de Datos
 └── README.md
 ```
 
-## 🛠️ Tecnologías
+## Tecnologías
 
 Python · Pandas · NumPy · Matplotlib · Seaborn · Streamlit · Programación Orientada a Objetos
 
-## ▶️ Cómo ejecutar localmente
+## Cómo ejecutar localmente
 
 1. Clonar el repositorio y entrar a la carpeta.
 2. Instalar las dependencias:
@@ -74,7 +74,7 @@ Python · Pandas · NumPy · Matplotlib · Seaborn · Streamlit · Programación
    ```
 4. En el menú lateral, ir a **Carga del dataset** y subir `InsuranceCompany.csv`.
 
-## 📸 Capturas
+## Capturas
 
 ![Home](capturas/home.png)
 ![Carga del dataset](capturas/carga.png)
