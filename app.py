@@ -12,7 +12,7 @@ from libreria_funciones_tf import (
 )
 from libreria_clases_tf import DataAnalyzer, PALETA_RENOVACION, COLOR_BARRAS
 
-st.set_page_config(page_title="Insurance Company - EDA", page_icon="🛡️", layout="wide")
+st.set_page_config(page_title="Insurance Company - EDA", layout="wide")
 sns.set_theme(style="whitegrid")
 
 # Columnas que debe tener el archivo para que la app funcione
@@ -38,7 +38,7 @@ if "df" not in st.session_state:
 # =========================================================
 # SIDEBAR - MENÚ PRINCIPAL
 # =========================================================
-st.sidebar.title("🛡️ Insurance Company")
+st.sidebar.title("Insurance Company")
 st.sidebar.caption("Análisis de renovación de pólizas")
 
 seccion = st.sidebar.radio(
@@ -57,7 +57,7 @@ else:
 # MÓDULO 1 - HOME
 # =========================================================
 if seccion == "Home":
-    st.title("🛡️ ¿Qué hace que un cliente renueve su póliza?")
+    st.title("¿Qué hace que un cliente renueve su póliza?")
     st.subheader("Análisis Exploratorio de Datos (EDA) - Insurance Company")
 
     col1, col2 = st.columns([2, 1])
@@ -94,14 +94,14 @@ if seccion == "Home":
         st.markdown("- Streamlit")
         st.markdown("- Programación Orientada a Objetos (clase `DataAnalyzer`)")
 
-    st.info("👉 Para comenzar, ve al módulo **Carga del dataset** en el menú lateral.")
+    st.info("Para comenzar, ve al módulo **Carga del dataset** en el menú lateral.")
 
 
 # =========================================================
 # MÓDULO 2 - CARGA DEL DATASET
 # =========================================================
 elif seccion == "Carga del dataset":
-    st.title("📂 Carga del dataset")
+    st.title("Carga del dataset")
     st.write("Sube el archivo **InsuranceCompany.csv** para habilitar el análisis.")
 
     archivo = st.file_uploader("Selecciona el archivo CSV", type=["csv"])
@@ -115,7 +115,7 @@ elif seccion == "Carga del dataset":
                 st.error(f"El archivo no tiene las columnas esperadas. Faltan: {', '.join(faltantes)}")
             else:
                 st.session_state.df = df
-                st.success(f"Archivo '{archivo.name}' cargado correctamente ✅")
+                st.success(f"Archivo '{archivo.name}' cargado correctamente")
         except Exception as error:
             st.error(f"No se pudo leer el archivo: {error}")
 
@@ -137,10 +137,10 @@ elif seccion == "Carga del dataset":
 # MÓDULO 3 - ANÁLISIS EXPLORATORIO (EDA)
 # =========================================================
 elif seccion == "Análisis Exploratorio (EDA)":
-    st.title("🔎 Análisis Exploratorio de Datos")
+    st.title("Análisis Exploratorio de Datos")
 
     if st.session_state.df is None:
-        st.warning("⚠️ Primero carga el dataset en el módulo **Carga del dataset**.")
+        st.warning("Primero carga el dataset en el módulo **Carga del dataset**.")
         st.stop()
 
     analizador = DataAnalyzer(st.session_state.df)
@@ -528,10 +528,10 @@ elif seccion == "Análisis Exploratorio (EDA)":
 # MÓDULO 4 - CONCLUSIONES
 # =========================================================
 elif seccion == "Conclusiones":
-    st.title("✅ Conclusiones finales")
+    st.title("Conclusiones finales")
 
     if st.session_state.df is None:
-        st.warning("⚠️ Primero carga el dataset en el módulo **Carga del dataset**.")
+        st.warning("Primero carga el dataset en el módulo **Carga del dataset**.")
         st.stop()
 
     analizador = DataAnalyzer(st.session_state.df)
