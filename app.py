@@ -8,22 +8,19 @@ from libreria_funciones_tf import (
     validar_columnas,
     calcular_tasa_renovacion,
     formatear_numero,
-    formatear_porcentaje
-)
+    formatear_porcentaje)
 from libreria_clases_tf import DataAnalyzer, PALETA_RENOVACION, COLOR_BARRAS
 
 st.set_page_config(page_title="Insurance Company - EDA", layout="wide")
 sns.set_theme(style="whitegrid")
 
-# Columnas que debe tener el archivo para que la app funcione
+
 COLUMNAS_ESPERADAS = [
     "id", "perc_premium_paid_by_cash_credit", "age_in_days", "Income",
     "Count_3-6_months_late", "Count_6-12_months_late", "Count_more_than_12_months_late",
     "application_underwriting_score", "no_of_premiums_paid", "sourcing_channel",
-    "residence_area_type", "premium", "renewal"
-]
+    "residence_area_type", "premium", "renewal"]
 
-# Tramos que usamos en los hallazgos y conclusiones
 CORTES_ATRASOS = [-1, 0, 1, 2, 100]
 ETIQUETAS_ATRASOS = ["0 atrasos", "1 atraso", "2 atrasos", "3+ atrasos"]
 CORTES_PAGO_EFECTIVO = [-0.01, 0.25, 0.50, 0.75, 1.0]
@@ -35,16 +32,15 @@ if "df" not in st.session_state:
     st.session_state.df = None
 
 
-# =========================================================
-# SIDEBAR - MENÚ PRINCIPAL
+
+# sidebar
 # =========================================================
 st.sidebar.title("Insurance Company")
 st.sidebar.caption("Análisis de renovación de pólizas")
 
 seccion = st.sidebar.radio(
     "Navegación",
-    ["Home", "Carga del dataset", "Análisis Exploratorio (EDA)", "Conclusiones"]
-)
+    ["Home", "Carga del dataset", "Análisis Exploratorio (EDA)", "Conclusiones"])
 
 st.sidebar.markdown("---")
 if st.session_state.df is not None:
@@ -53,8 +49,8 @@ else:
     st.sidebar.warning("Dataset no cargado")
 
 
-# =========================================================
-# MÓDULO 1 - HOME
+
+# HOME
 # =========================================================
 if seccion == "Home":
     st.title("¿Qué hace que un cliente renueve su póliza?")
@@ -69,8 +65,7 @@ if seccion == "Home":
             "(variable `renewal`) a partir del historial de clientes: perfil demográfico, "
             "ingresos, comportamiento de pago, canal de captación y valor de la prima. "
             "El enfoque es **descriptivo y orientado a la toma de decisiones** "
-            "(retención de clientes), no a la predicción."
-        )
+            "(retención de clientes), no a la predicción.")
 
         st.markdown("### Sobre el dataset")
         st.write(
@@ -78,8 +73,7 @@ if seccion == "Home":
             "porcentaje de la prima pagada en efectivo/crédito, edad (en días), ingreso, "
             "número de pagos atrasados (3-6, 6-12 y más de 12 meses), puntaje de evaluación "
             "(underwriting score), número de primas pagadas, canal de captación (A-E), "
-            "tipo de residencia (Urban/Rural), valor de la prima y si renovó (1) o no (0)."
-        )
+            "tipo de residencia (Urban/Rural), valor de la prima y si renovó (1) o no (0).")
 
     with col2:
         st.markdown("### Autora")
@@ -97,8 +91,8 @@ if seccion == "Home":
     st.info("Para comenzar, ve al módulo **Carga del dataset** en el menú lateral.")
 
 
-# =========================================================
-# MÓDULO 2 - CARGA DEL DATASET
+
+# CARGA DEL DATASET
 # =========================================================
 elif seccion == "Carga del dataset":
     st.title("Carga del dataset")
@@ -133,8 +127,8 @@ elif seccion == "Carga del dataset":
         st.warning("Aún no se ha cargado ningún archivo. El análisis está deshabilitado.")
 
 
-# =========================================================
-# MÓDULO 3 - ANÁLISIS EXPLORATORIO (EDA)
+
+# ANÁLISIS EXPLORATORIO (EDA)
 # =========================================================
 elif seccion == "Análisis Exploratorio (EDA)":
     st.title("Análisis Exploratorio de Datos")
@@ -149,12 +143,9 @@ elif seccion == "Análisis Exploratorio (EDA)":
     tabs = st.tabs([
         "1. Info general", "2. Tipos de variables", "3. Estadísticas", "4. Faltantes",
         "5. Numéricas", "6. Categóricas", "7. Num vs Cat", "8. Cat vs Cat",
-        "9. Análisis dinámico", "10. Hallazgos"
-    ])
+        "9. Análisis dinámico", "10. Hallazgos"])
 
-    # -----------------------------------------------------
-    # ÍTEM 1 - INFORMACIÓN GENERAL
-    # -----------------------------------------------------
+    # 1_INFORMACIÓN GENERAL
     with tabs[0]:
         st.header("Ítem 1: Información general del dataset")
         st.write("Revisamos estructura, tipos de datos y valores nulos de cada columna.")
@@ -170,19 +161,17 @@ elif seccion == "Análisis Exploratorio (EDA)":
         st.write(
             f"El dataset tiene **{formatear_numero(df.shape[0])} clientes**. La variable `renewal` "
             "es numérica (0/1) pero representa una categoría, por eso en la app la tratamos como "
-            "categórica y creamos la etiqueta `renovacion` (Renovó / No renovó)."
-        )
+            "categórica y creamos la etiqueta `renovacion` (Renovó / No renovó).")
 
-    # -----------------------------------------------------
-    # ÍTEM 2 - CLASIFICACIÓN DE VARIABLES
-    # -----------------------------------------------------
+  
+    # 2_CLASIFICACIÓN DE VARIABLES
+
     with tabs[1]:
         st.header("Ítem 2: Clasificación de variables")
         st.write(
             "Usamos la función personalizada `clasificar_variables()` (archivo "
             "`libreria_funciones_tf.py`). Se excluye `id` y `age_in_days` (se reemplaza por "
-            "`edad_anios`). También se agregan dos variables derivadas: `edad_anios` y `total_atrasos`."
-        )
+            "`edad_anios`). También se agregan dos variables derivadas: `edad_anios` y `total_atrasos`.")
 
         conteo = analizador.conteo_tipos()
         col1, col2 = st.columns(2)
@@ -197,9 +186,8 @@ elif seccion == "Análisis Exploratorio (EDA)":
             st.markdown("**Categóricas**")
             st.dataframe(pd.DataFrame({"Variable": analizador.columnas_categoricas}), width="stretch")
 
-    # -----------------------------------------------------
-    # ÍTEM 3 - ESTADÍSTICAS DESCRIPTIVAS
-    # -----------------------------------------------------
+   
+    # 3_ESTADÍSTICAS DESCRIPTIVAS
     with tabs[2]:
         st.header("Ítem 3: Estadísticas descriptivas")
         st.write("Tabla de `.describe()` con mediana, moda y coeficiente de variación agregados.")
@@ -208,8 +196,7 @@ elif seccion == "Análisis Exploratorio (EDA)":
             "Variables a describir",
             analizador.columnas_numericas,
             default=analizador.columnas_numericas,
-            key="multi_describe"
-        )
+            key="multi_describe")
         if len(columnas_elegidas) > 0:
             st.dataframe(analizador.estadisticas_descriptivas(columnas_elegidas), width="stretch")
 
@@ -219,28 +206,22 @@ elif seccion == "Análisis Exploratorio (EDA)":
         media_ingreso = df["Income"].mean()
         mediana_ingreso = df["Income"].median()
         st.markdown("**Interpretación**")
-        st.write(
-            f"- **Income:** media de {formatear_numero(media_ingreso)} vs mediana de "
+        st.write(f"- **Income:** media de {formatear_numero(media_ingreso)} vs mediana de "
             f"{formatear_numero(mediana_ingreso)}. La media es mayor porque hay ingresos "
             f"extremadamente altos (máximo {formatear_numero(df['Income'].max())}): la distribución "
-            "tiene sesgo a la derecha, por lo que la **mediana** representa mejor al cliente típico."
-        )
+            "tiene sesgo a la derecha, por lo que la **mediana** representa mejor al cliente típico.")
         st.write(
             f"- **Edad:** el cliente típico tiene {df['edad_anios'].median():.0f} años "
-            f"(media {df['edad_anios'].mean():.1f}); la media y la mediana son parecidas, distribución bastante simétrica."
-        )
+            f"(media {df['edad_anios'].mean():.1f}); la media y la mediana son parecidas, distribución bastante simétrica.")
         st.write(
             f"- **Atrasos:** la mediana de `total_atrasos` es {df['total_atrasos'].median():.0f}; la mayoría "
-            "de clientes no tiene atrasos, pero la desviación estándar alta indica un grupo con muchos atrasos."
-        )
+            "de clientes no tiene atrasos, pero la desviación estándar alta indica un grupo con muchos atrasos.")
         st.write(
             f"- **Underwriting score:** muy concentrado (media {df['application_underwriting_score'].mean():.2f}, "
-            f"desv. {df['application_underwriting_score'].std():.2f}): poca dispersión entre clientes."
-        )
+            f"desv. {df['application_underwriting_score'].std():.2f}): poca dispersión entre clientes.")
 
-    # -----------------------------------------------------
-    # ÍTEM 4 - VALORES FALTANTES
-    # -----------------------------------------------------
+
+    # 4_VALORES FALTANTES
     with tabs[3]:
         st.header("Ítem 4: Análisis de valores faltantes")
         tabla_nulos = analizador.valores_faltantes()
@@ -258,16 +239,13 @@ elif seccion == "Análisis Exploratorio (EDA)":
             st.write(
                 f"- `application_underwriting_score` es la variable con más nulos "
                 f"({tabla_nulos['% Nulos'].max():.2f}% de los registros). Al ser un porcentaje bajo, "
-                "se puede trabajar ignorando los nulos o imputando con la **mediana**."
-            )
+                "se puede trabajar ignorando los nulos o imputando con la **mediana**.")
             st.write(
                 "- Las tres columnas de atrasos tienen los mismos 97 nulos (los mismos clientes). "
-                "Son muy pocos y no afectan las conclusiones. Pandas los ignora al calcular medias."
-            )
+                "Son muy pocos y no afectan las conclusiones. Pandas los ignora al calcular medias.")
 
-    # -----------------------------------------------------
-    # ÍTEM 5 - DISTRIBUCIÓN DE VARIABLES NUMÉRICAS
-    # -----------------------------------------------------
+  
+    # 5_DISTRIBUCIÓN DE VARIABLES NUMÉRICAS
     with tabs[4]:
         st.header("Ítem 5: Distribución de variables numéricas")
 
@@ -298,9 +276,8 @@ elif seccion == "Análisis Exploratorio (EDA)":
         else:
             st.info("Distribución **aproximadamente simétrica**: media y mediana son parecidas.")
 
-    # -----------------------------------------------------
-    # ÍTEM 6 - VARIABLES CATEGÓRICAS
-    # -----------------------------------------------------
+
+    # 6_VARIABLES CATEGÓRICAS
     with tabs[5]:
         st.header("Ítem 6: Análisis de variables categóricas")
         variable_cat = st.selectbox("Variable categórica", analizador.columnas_categoricas, key="sel_cat")
@@ -314,16 +291,12 @@ elif seccion == "Análisis Exploratorio (EDA)":
         frecuencias = analizador.tabla_frecuencias(variable_cat)
         st.write(
             f"La categoría más frecuente de **{variable_cat}** es **{frecuencias.index[0]}** con "
-            f"{frecuencias['Proporción %'].iloc[0]:.1f}% de los clientes."
-        )
+            f"{frecuencias['Proporción %'].iloc[0]:.1f}% de los clientes.")
         st.caption(
             "Nota: `renewal` está muy desbalanceada (~94% renueva). Por eso en los siguientes ítems "
-            "comparamos **tasas de renovación** por grupo y no solo conteos."
-        )
+            "comparamos **tasas de renovación** por grupo y no solo conteos.")
 
-    # -----------------------------------------------------
-    # ÍTEM 7 - BIVARIADO: NUMÉRICO VS CATEGÓRICO
-    # -----------------------------------------------------
+    # 7_IVARIADO: NUMÉRICO VS CATEGÓRICO
     with tabs[6]:
         st.header("Ítem 7: Análisis bivariado (numérico vs categórico)")
         st.write("Comparamos cómo cambia una variable numérica entre los clientes que renuevan y los que no.")
@@ -332,8 +305,7 @@ elif seccion == "Análisis Exploratorio (EDA)":
         with col1:
             variable_num = st.selectbox(
                 "Variable numérica", analizador.columnas_numericas,
-                index=analizador.columnas_numericas.index("Income"), key="sel_biv_num"
-            )
+                index=analizador.columnas_numericas.index("Income"), key="sel_biv_num")
         with col2:
             opciones_grupo = ["renovacion", "sourcing_channel", "residence_area_type"]
             variable_grupo = st.selectbox("Agrupar por", opciones_grupo, key="sel_biv_cat")
@@ -354,18 +326,15 @@ elif seccion == "Análisis Exploratorio (EDA)":
         st.dataframe(medianas.round(3), width="stretch")
         st.write(
             "Los clientes que renuevan tienen **mayor ingreso**, son **mayores** y pagan una "
-            "**menor proporción de la prima en efectivo/crédito**. El valor de la prima casi no cambia."
-        )
+            "**menor proporción de la prima en efectivo/crédito**. El valor de la prima casi no cambia.")
 
-    # -----------------------------------------------------
-    # ÍTEM 8 - BIVARIADO: CATEGÓRICO VS CATEGÓRICO
-    # -----------------------------------------------------
+
+    # 8_BIVARIADO: CATEGÓRICO VS CATEGÓRICO
     with tabs[7]:
         st.header("Ítem 8: Análisis bivariado (categórico vs categórico)")
 
         variable_fila = st.selectbox(
-            "Variable a comparar con la renovación", ["sourcing_channel", "residence_area_type"], key="sel_cat_cat"
-        )
+            "Variable a comparar con la renovación", ["sourcing_channel", "residence_area_type"], key="sel_cat_cat")
         ver_conteos = st.checkbox("Ver conteos absolutos en lugar de porcentajes")
 
         col1, col2 = st.columns([2, 1])
@@ -381,12 +350,10 @@ elif seccion == "Análisis Exploratorio (EDA)":
         st.write(
             f"La mayor tasa de renovación está en **{mejor}** ({tasas.loc[mejor, 'Tasa renovación %']}%) y la menor "
             f"en **{peor}** ({tasas.loc[peor, 'Tasa renovación %']}%). Diferencia: "
-            f"{tasas.loc[mejor, 'Tasa renovación %'] - tasas.loc[peor, 'Tasa renovación %']:.1f} puntos porcentuales."
-        )
+            f"{tasas.loc[mejor, 'Tasa renovación %'] - tasas.loc[peor, 'Tasa renovación %']:.1f} puntos porcentuales.")
 
-    # -----------------------------------------------------
-    # ÍTEM 9 - ANÁLISIS DINÁMICO
-    # -----------------------------------------------------
+ 
+    # 9_ANÁLISIS DINÁMICO
     with tabs[8]:
         st.header("Ítem 9: Análisis basado en parámetros seleccionados")
         st.write("Filtra un segmento de clientes y elige qué variables analizar.")
@@ -395,18 +362,15 @@ elif seccion == "Análisis Exploratorio (EDA)":
         with col1:
             canales = st.multiselect(
                 "Canal de captación", sorted(df["sourcing_channel"].unique()),
-                default=sorted(df["sourcing_channel"].unique())
-            )
+                default=sorted(df["sourcing_channel"].unique()))
         with col2:
             areas = st.multiselect(
                 "Tipo de residencia", sorted(df["residence_area_type"].unique()),
-                default=sorted(df["residence_area_type"].unique())
-            )
+                default=sorted(df["residence_area_type"].unique()))
         with col3:
             edad_min, edad_max = st.slider(
                 "Rango de edad (años)", int(df["edad_anios"].min()), int(df["edad_anios"].max()),
-                (int(df["edad_anios"].min()), int(df["edad_anios"].max()))
-            )
+                (int(df["edad_anios"].min()), int(df["edad_anios"].max())))
 
         solo_con_atrasos = st.checkbox("Solo clientes con al menos un pago atrasado")
 
@@ -414,8 +378,7 @@ elif seccion == "Análisis Exploratorio (EDA)":
         filtro = (
             df["sourcing_channel"].isin(canales)
             & df["residence_area_type"].isin(areas)
-            & df["edad_anios"].between(edad_min, edad_max)
-        )
+            & df["edad_anios"].between(edad_min, edad_max))
         if solo_con_atrasos:
             filtro = filtro & (df["total_atrasos"] > 0)
         df_segmento = df[filtro]
@@ -455,8 +418,7 @@ elif seccion == "Análisis Exploratorio (EDA)":
             st.markdown("**Matriz de correlación de las variables elegidas**")
             columnas_corr = st.multiselect(
                 "Variables para la correlación", analizador.columnas_numericas + ["renewal"],
-                default=["perc_premium_paid_by_cash_credit", "total_atrasos", "edad_anios", "Income", "renewal"]
-            )
+                default=["perc_premium_paid_by_cash_credit", "total_atrasos", "edad_anios", "Income", "renewal"])
             if len(columnas_corr) >= 2:
                 fig, ax = plt.subplots(figsize=(7, 5))
                 sns.heatmap(df_segmento[columnas_corr].corr(), annot=True, fmt=".2f", cmap="coolwarm",
@@ -466,9 +428,8 @@ elif seccion == "Análisis Exploratorio (EDA)":
             else:
                 st.caption("Elige al menos 2 variables.")
 
-    # -----------------------------------------------------
-    # ÍTEM 10 - HALLAZGOS CLAVE
-    # -----------------------------------------------------
+
+    # 10_HALLAZGOS CLAVE
     with tabs[9]:
         st.header("Ítem 10: Hallazgos clave")
         st.write("Resumen visual de la **tasa de renovación** según los factores más relevantes.")
@@ -486,8 +447,7 @@ elif seccion == "Análisis Exploratorio (EDA)":
             (axes[0, 0], tasa_atrasos, "Por número de pagos atrasados"),
             (axes[0, 1], tasa_pago, "Por % de prima pagada en efectivo/crédito"),
             (axes[1, 0], tasa_edad, "Por rango de edad"),
-            (axes[1, 1], tasa_canal, "Por canal de captación"),
-        ]
+            (axes[1, 1], tasa_canal, "Por canal de captación"),]
         for ax, tabla, titulo in graficos:
             ax.bar(tabla.index.astype(str), tabla["Tasa renovación %"], color=COLOR_BARRAS)
             ax.axhline(tasa_total, color="#E4572E", linestyle="--", label=f"Promedio {tasa_total:.1f}%")
@@ -503,29 +463,24 @@ elif seccion == "Análisis Exploratorio (EDA)":
         st.markdown("### Insights principales")
         st.write(
             f"1. **Los atrasos son la señal más fuerte:** sin atrasos renueva el "
-            f"{tasa_atrasos.iloc[0, 0]}% y con 3+ atrasos solo el {tasa_atrasos.iloc[-1, 0]}%."
-        )
+            f"{tasa_atrasos.iloc[0, 0]}% y con 3+ atrasos solo el {tasa_atrasos.iloc[-1, 0]}%.")
         st.write(
             f"2. **Forma de pago:** quienes pagan 75-100% de la prima en efectivo/crédito renuevan "
-            f"{tasa_pago.iloc[-1, 0]}% vs {tasa_pago.iloc[0, 0]}% de quienes pagan 0-25%."
-        )
+            f"{tasa_pago.iloc[-1, 0]}% vs {tasa_pago.iloc[0, 0]}% de quienes pagan 0-25%.")
         st.write(
             f"3. **Edad:** la renovación sube con la edad, de {tasa_edad.iloc[0, 0]}% (<30 años) "
-            f"a {tasa_edad.iloc[-1, 0]}% (60+)."
-        )
+            f"a {tasa_edad.iloc[-1, 0]}% (60+).")
         st.write(
             f"4. **Canal:** el canal A (el más grande) renueva {tasa_canal.loc['A', 'Tasa renovación %']}% y "
-            f"el D {tasa_canal.loc['D', 'Tasa renovación %']}%."
-        )
+            f"el D {tasa_canal.loc['D', 'Tasa renovación %']}%.")
         tasa_area = analizador.tasa_renovacion_por("residence_area_type")
         st.write(
             f"5. **Residencia no diferencia:** Urban {tasa_area.loc['Urban', 'Tasa renovación %']}% vs "
-            f"Rural {tasa_area.loc['Rural', 'Tasa renovación %']}%."
-        )
+            f"Rural {tasa_area.loc['Rural', 'Tasa renovación %']}%.")
 
 
-# =========================================================
-# MÓDULO 4 - CONCLUSIONES
+
+# CONCLUSIONES
 # =========================================================
 elif seccion == "Conclusiones":
     st.title("Conclusiones finales")
@@ -558,30 +513,26 @@ elif seccion == "Conclusiones":
         f"La renovación cae de {tasa_atrasos.iloc[0, 0]}% (sin atrasos) a {tasa_atrasos.iloc[-1, 0]}% "
         f"(3 o más atrasos). Como el {pct_con_atrasos:.1f}% de la cartera ya tiene al menos un atraso, "
         "conviene activar una **gestión de retención temprana** desde el primer pago demorado "
-        "(recordatorios, reprogramación de cuotas, contacto del agente)."
-    )
+        "(recordatorios, reprogramación de cuotas, contacto del agente).")
 
     st.markdown("#### 2. La forma de pago de la prima anticipa el riesgo")
     st.write(
         f"Los clientes que pagan más del 75% de su prima en efectivo/crédito renuevan "
         f"{tasa_pago.iloc[-1, 0]}%, frente a {tasa_pago.iloc[0, 0]}% de los que pagan menos del 25%. "
-        "Promover **débito automático** u otros medios de pago recurrentes puede mejorar la retención."
-    )
+        "Promover **débito automático** u otros medios de pago recurrentes puede mejorar la retención.")
 
     st.markdown("#### 3. Los clientes jóvenes requieren una estrategia diferenciada")
     st.write(
         f"La renovación crece con la edad: {tasa_edad.iloc[0, 0]}% en menores de 30 años vs "
         f"{tasa_edad.iloc[-1, 0]}% en mayores de 60. Para el segmento joven se recomiendan "
-        "productos más flexibles y comunicación digital."
-    )
+        "productos más flexibles y comunicación digital.")
 
     st.markdown("#### 4. El canal de captación influye en la calidad del cliente")
     st.write(
         f"El canal A concentra la mayor parte de la cartera y tiene la mejor renovación "
         f"({tasa_canal.loc['A', 'Tasa renovación %']}%), mientras que el canal D tiene la más baja "
         f"({tasa_canal.loc['D', 'Tasa renovación %']}%). Se sugiere revisar los criterios de captación "
-        "y el seguimiento post-venta de los canales C, D y E."
-    )
+        "y el seguimiento post-venta de los canales C, D y E.")
 
     st.markdown("#### 5. El ingreso ayuda, pero la zona de residencia y la prima no diferencian")
     st.write(
@@ -589,5 +540,4 @@ elif seccion == "Conclusiones":
         f"que el de quienes no renuevan ({formatear_numero(medianas_ingreso['No renovó'])}). En cambio, "
         "urbano y rural renuevan prácticamente igual y la prima mediana es la misma en ambos grupos. "
         "Por lo tanto, los recursos de retención deben enfocarse en **comportamiento de pago, edad y canal**, "
-        "no en la zona geográfica."
-    )
+        "no en la zona geográfica.")
