@@ -57,10 +57,6 @@ Aplicación interactiva en **Streamlit** para el Análisis Exploratorio de Datos
 └── README.md
 ```
 
-## Tecnologías
-
-Python · Pandas · NumPy · Matplotlib · Seaborn · Streamlit · Programación Orientada a Objetos
-
 ## Cómo ejecutar localmente
 
 1. Clonar el repositorio y entrar a la carpeta.
