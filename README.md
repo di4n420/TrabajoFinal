@@ -10,8 +10,8 @@ Aplicación interactiva en **Streamlit** para el Análisis Exploratorio de Datos
 
 ## 🔗 Links
 
-- **App desplegada:** _(pegar aquí el link de Streamlit Cloud)_
-- **Repositorio:** _(pegar aquí el link de GitHub)_
+- **App desplegada:** https://trabajo-final-python-insurance.streamlit.app/
+- **Repositorio:** https://github.com/di4n420/TrabajoFinal
 
 ---
 
